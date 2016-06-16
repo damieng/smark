@@ -1,29 +1,51 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
-function getCurrentTabUrl(callback) {
-  var queryInfo = {
-    active: false,
-    currentWindow: true
-  };
+class UrlHistoryList extends Component {
+  constructor() {
+      super();
+      this.state = { visits: [] };
+  }
 
-  chrome.tabs.query(queryInfo, function(tabs) {
-    var tab = tabs[0]
-    var url = tab.url
-    console.assert(typeof url == 'string', 'tab.url should be a string')
+  addVisit(visit) {
+    this.setState({
+      visits: this.state.visits.concat(visit)
+    })
+  }
 
-    callback(url);
-  });
+  componentWillMount() {
+    const millisecondsInAWeek = 1000 * 60 * 60 * 24 * 7;
+    const startTime = Date.now() - millisecondsInAWeek;
+    chrome.history.search(
+      { text: '', maxResults: 10000, startTime: startTime },
+      (visit) => {
+        console.log(visit)
+        this.addVisit(visit)
+      }
+    )
+  }
+
+  render() {
+    return (
+      <div>
+        <h4>{this.state.visits.length}</h4>
+        <ul>
+          {
+            this.state.visits.map((visit, index) => (
+              <li key={index}>
+                <a href={visit.url} target="_blank">{visit.title}</a>
+              </li>
+              )
+            )
+          }
+        </ul>
+      </div>
+    )
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  getCurrentTabUrl( url => {
-    console.log(url)
-
-    document.getElementById('password').innerText = password
-
-    ReactDOM.render(
-      (<div>Hello from React! Your password is: {password}</div>),
-      document.getElementById('root'));
-  })
+  ReactDOM.render(
+    (<UrlHistoryList />),
+    document.getElementById('root'));
 });
