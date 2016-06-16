@@ -1,0 +1,22 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <script src="dist/bundle.js"></script>
+  </head>
+  <body>
+    <div class="card-panel teal darken-1">
+    <h1>Surelock Holmes</h1>
+    </div>
+    <div id="root">
+    </div>
+    Your password is <span id="password" />
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+  </body>
+</html>

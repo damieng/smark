@@ -1,0 +1,6 @@
+# Build files
+Extensions/Chrome/dist/*
+
+# npm
+npm-debug.log
+node_modules/
