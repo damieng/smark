@@ -9,7 +9,8 @@ class UrlHistoryList extends Component {
       this.state = {
         marks: {},
         sortedKeys: [],
-        scope: 'days'
+        scope: 'days',
+        loading: true
       }
   }
 
@@ -29,11 +30,14 @@ class UrlHistoryList extends Component {
       .sort(this.compareWeight)
       .map(k => k.url)
 
+    this.state.loading = false;
     this.forceUpdate()
   }
 
   componentWillMount() {
-    this.loadData()
+    setTimeout(() => {
+      this.loadData()
+    }, 100)
   }
 
 
@@ -120,6 +124,18 @@ class UrlHistoryList extends Component {
         paddingLeft: 10,
         boxShadow: '#bbb 0px 3px 5px'
       }
+    }
+
+    if(this.state.loading) {
+      return (
+        <div style={{ height: 50 }}>
+          <header style={ styles.titleBar }>
+            <span><strong style={{ color: 'white ' }}>s</strong>marks</span>
+          </header>
+          <div style={{ marginTop: 50, paddingLeft: 10 }}>
+            Loading...
+          </div>
+        </div>)
     }
 
     return (
