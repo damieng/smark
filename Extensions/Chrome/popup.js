@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
-require('bulma');
+require('bulma')
 
 class UrlHistoryList extends Component {
   constructor() {
@@ -51,17 +51,23 @@ class UrlHistoryList extends Component {
           activeTabUrls[url] = tab.url
         })
 
-        const now = new Date('2016-07-27 10:00')
-        //const now = new Date()
-        const days = 60 * 24
+        const now = new Date()
+        const scopes = {
+          days: { timespan: 60 * 24, lookbehind: 7, slidingWindow: 30 },
+          hours: { timespan: 60, lookbehind: 12, slidingWindow: 30 },
+          minutes: { timespan: 1, lookbehind: 30, slidingWindow: 15 }
+        }
 
-        for(var i=0; i <= 7; i++) {
-          const startTime = this.adjustMinutes(now, -(days * i) - 30)
-          const endTime = this.adjustMinutes(now, -(days * i) + 30)
+        const scope = scopes[this.state.scope]
+
+        for(var i=0; i <= scope.lookbehind; i++) {
+          const startTime = this.adjustMinutes(now, -(scope.timespan * i) - scope.slidingWindow)
+          const endTime = this.adjustMinutes(now, -(scope.timespan * i) + scope.slidingWindow)
 
           chrome.history.search(
             { text: '', maxResults: 10000, startTime: startTime, endTime: endTime },
             (visit) => {
+              console.log(visit)
               const visitsWithWeight = visit
                 .filter(v => !activeTabUrls[v.url])
                 .map(v => Object.assign({}, v, { weight: 1.0 }))
@@ -110,7 +116,7 @@ class UrlHistoryList extends Component {
         fontSize: 28,
         paddingLeft: 10
       }
-    };
+    }
 
     return (
       <div>
@@ -134,7 +140,7 @@ class UrlHistoryList extends Component {
                   </figure>
                   <div className="media-content" style={{ width: 250 }}>
                     <div className="content" style={styles.content}>
-                      <a title={mark.url} href={mark.url} target="_blank" style={{ borderBottom: '0' }}>{mark.title}</a>
+                      <a title={mark.url} href={mark.url} target="_blank" style={{ borderBottom: '0px' }}>{mark.title}</a>
                     </div>
                   </div>
                 </article>
