@@ -29,24 +29,36 @@ class UrlHistoryList extends Component {
   }
 
   componentWillMount() {
-    this.loadData()
+    chrome.tabs.query({}, (tabs) => {
+      const activeUrls = {}
+      tabs.forEach((tab) => {
+        const url = tab.url;
+        activeUrls[url] = tab.url;
+      });
+
+      this.loadData(activeUrls)
+    })
   }
 
   adjustMinutes(date, minutes) {
     return date.getTime() + minutes * 60000
   }
 
-  loadData() {
-    const now = new Date('2016-07-27 10:00')
+  loadData(activeTabUrls) {
+    //const now = new Date('2016-07-27 10:00')
+    const now = new Date()
     const days = 60 * 24
 
     for(var i=0; i <= 7; i++) {
       const startTime = this.adjustMinutes(now, -(days * i) - 30)
       const endTime = this.adjustMinutes(now, -(days * i) + 30)
+
       chrome.history.search(
         { text: '', maxResults: 10000, startTime: startTime, endTime: endTime },
         (visit) => {
-          const visitsWithWeight = visit.map(v => Object.assign({}, v, { weight: 1.0 }))
+          const visitsWithWeight = visit
+            .filter(v => !activeTabUrls[v.url])
+            .map(v => Object.assign({}, v, { weight: 1.0 }))
           this.mergeVisits(visitsWithWeight)
         }
       )
