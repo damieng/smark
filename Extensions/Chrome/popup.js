@@ -67,7 +67,6 @@ class UrlHistoryList extends Component {
           chrome.history.search(
             { text: '', maxResults: 10000, startTime: startTime, endTime: endTime },
             (visit) => {
-              console.log(visit)
               const visitsWithWeight = visit
                 .filter(v => !activeTabUrls[v.url])
                 .map(v => Object.assign({}, v, { weight: 1.0 }))
