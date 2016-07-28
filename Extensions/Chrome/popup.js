@@ -30,14 +30,17 @@ class UrlHistoryList extends Component {
       .sort(this.compareWeight)
       .map(k => k.url)
 
-    this.state.loading = false;
-    this.forceUpdate()
+
+    if(this.state.renderTimer) clearTimeout(this.state.renderTimer)
+
+    this.state.renderTimer = setTimeout(() => {
+      this.state.loading = false;
+      this.forceUpdate()
+    }, 64)
   }
 
   componentWillMount() {
-    setTimeout(() => {
-      this.loadData()
-    }, 100)
+    this.loadData()
   }
 
 
