@@ -104,7 +104,8 @@ class UrlHistoryList extends Component {
         fontSize: '0.5em',
         backgroundColor: 'transparent',
         color: 'white',
-        borderColor: '#16a085'
+        borderColor: 'white'
+
       },
       titleBar: {
         position: 'fixed',
