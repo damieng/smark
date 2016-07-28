@@ -100,21 +100,24 @@ class UrlHistoryList extends Component {
         lineHeight: '1.2em'
       },
       scopeDropdown: {
-        marginLeft: 110
+        marginLeft: 110,
+        fontSize: '0.5em',
+        backgroundColor: 'transparent',
+        color: 'white',
+        borderColor: '#16a085'
       },
       titleBar: {
         position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
-        //backgroundColor: '#16a085',
-        borderBottom: 'solid 5px #16a085',
         backgroundColor: '#1abc9c',
         color: 'white',
         zIndex: 100,
         fontWeight: 300,
         fontSize: 28,
-        paddingLeft: 10
+        paddingLeft: 10,
+        boxShadow: '#bbb 0px 3px 5px'
       }
     }
 
