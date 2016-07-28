@@ -1,24 +1,30 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
+require('bulma');
+
 class UrlHistoryList extends Component {
   constructor() {
-      super();
-      this.state = { marks: {}, sortedKeys: [] };
+      super()
+      this.state = { marks: {}, sortedKeys: [] }
   }
 
   mergeVisits(visits) {
     const marks = this.state.marks
     visits.filter(f => f.title).forEach(v => {
         if (marks[v.url]) {
-          console.log(`adding values for ${v.url} new title ${v.title} old title ${marks[v.url].title}`)
           marks[v.url].weight += v.weight
         } else {
           marks[v.url] = v
         }
       }
     )
-    this.state.sortedKeys = Object.keys(this.state.marks).map(k => this.state.marks[k]).sort(this.compareWeight).filter(f => f.weight >= 3).map(k => k.url)
+
+    this.state.sortedKeys = Object.keys(this.state.marks)
+      .map(k => this.state.marks[k])
+      .sort(this.compareWeight)
+      .map(k => k.url)
+
     this.forceUpdate()
   }
 
@@ -31,7 +37,7 @@ class UrlHistoryList extends Component {
   }
 
   loadData() {
-    const now = new Date('2016-07-13 10:00')
+    const now = new Date('2016-07-27 10:00')
     const days = 60 * 24
 
     for(var i=0; i <= 7; i++) {
@@ -40,38 +46,53 @@ class UrlHistoryList extends Component {
       chrome.history.search(
         { text: '', maxResults: 10000, startTime: startTime, endTime: endTime },
         (visit) => {
-          const visitsWithWeight = visit.map(v => Object.assign({}, v, { weight: 1.0 }));
+          const visitsWithWeight = visit.map(v => Object.assign({}, v, { weight: 1.0 }))
           this.mergeVisits(visitsWithWeight)
-          //console.log(`Visits for ${new Date(startTime)} to ${new Date(endTime)}`)
-          //console.log(visit)
         }
       )
     }
   }
 
   compareWeight(a, b) {
-    if (a.weight > b.weight) return -1;
-    if (a.weight < b.weight) return 1;
-    return 0;
+    if (a.weight > b.weight) return -1
+    if (a.weight < b.weight) return 1
+    return 0
   }
 
   render() {
+    const styles = {
+      content: {
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        width: '100%',
+        overflow: 'hidden',
+        lineHeight: '1.2em'
+      }
+    };
+
     return (
       <div>
-        <h4>{this.state.marks.length}</h4>
-        <ul>
+        <div style={{padding: 10}}>
           {
             this.state.sortedKeys.map((k, index) => {
               var mark = this.state.marks[k]
               return (
-                <li key={index}>
-                  <a href={k} target="_blank">{mark.title} ({mark.weight})</a>
-                </li>
+                <article className="media" key={index}>
+                  <figure className="media-left">
+                    <div className="image is-16x16" style={{ backgroundImage: `-webkit-image-set(url("chrome://favicon/size/16@2x/${mark.url}") 2x)`}}>
+                    </div>
+                  </figure>
+                  <div className="media-content" style={{ width: 250 }}>
+                    <div className="content" style={styles.content}>
+                      <a title={mark.url} href={mark.url} target="_blank" style={{ borderBottom: '0' }}>{mark.title}</a>
+                    </div>
+                  </div>
+                </article>
                 )
               }
             )
           }
-        </ul>
+        </div>
       </div>
     )
   }
@@ -80,5 +101,5 @@ class UrlHistoryList extends Component {
 document.addEventListener('DOMContentLoaded', function() {
   ReactDOM.render(
     (<UrlHistoryList />),
-    document.getElementById('root'));
-});
+    document.getElementById('root'))
+})
