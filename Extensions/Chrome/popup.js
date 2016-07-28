@@ -45,8 +45,8 @@ class UrlHistoryList extends Component {
   }
 
   loadData(activeTabUrls) {
-    //const now = new Date('2016-07-27 10:00')
-    const now = new Date()
+    const now = new Date('2016-07-27 10:00')
+    //const now = new Date()
     const days = 60 * 24
 
     for(var i=0; i <= 7; i++) {
@@ -79,12 +79,28 @@ class UrlHistoryList extends Component {
         width: '100%',
         overflow: 'hidden',
         lineHeight: '1.2em'
+      },
+      titleBar: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 40,
+        backgroundColor: '#1fc8db',
+        color: 'white',
+        zIndex: 100,
+        fontWeight: 300,
+        fontSize: 28,
+        paddingLeft: 10
       }
     };
 
     return (
       <div>
-        <div style={{padding: 10}}>
+        <header style={ styles.titleBar }>
+          smarks
+        </header>
+        <div style={{padding: 10, marginTop: 40 }}>
           {
             this.state.sortedKeys.map((k, index) => {
               var mark = this.state.marks[k]
