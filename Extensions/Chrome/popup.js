@@ -6,7 +6,11 @@ require('bulma');
 class UrlHistoryList extends Component {
   constructor() {
       super()
-      this.state = { marks: {}, sortedKeys: [] }
+      this.state = {
+        marks: {},
+        sortedKeys: [],
+        scope: 'days'
+      }
   }
 
   mergeVisits(visits) {
@@ -29,46 +33,56 @@ class UrlHistoryList extends Component {
   }
 
   componentWillMount() {
-    chrome.tabs.query({}, (tabs) => {
-      const activeUrls = {}
-      tabs.forEach((tab) => {
-        const url = tab.url;
-        activeUrls[url] = tab.url;
-      });
-
-      this.loadData(activeUrls)
-    })
+    this.loadData()
   }
+
 
   adjustMinutes(date, minutes) {
     return date.getTime() + minutes * 60000
   }
 
-  loadData(activeTabUrls) {
-    const now = new Date('2016-07-27 10:00')
-    //const now = new Date()
-    const days = 60 * 24
+  loadData() {
+    chrome.storage.sync.get('scope', (storage) => {
+      this.setState(Object.assign({}, this.state, { scope: storage.scope }))
+      chrome.tabs.query({}, (tabs) => {
+        const activeTabUrls = {}
+        tabs.forEach((tab) => {
+          const url = tab.url
+          activeTabUrls[url] = tab.url
+        })
 
-    for(var i=0; i <= 7; i++) {
-      const startTime = this.adjustMinutes(now, -(days * i) - 30)
-      const endTime = this.adjustMinutes(now, -(days * i) + 30)
+        const now = new Date('2016-07-27 10:00')
+        //const now = new Date()
+        const days = 60 * 24
 
-      chrome.history.search(
-        { text: '', maxResults: 10000, startTime: startTime, endTime: endTime },
-        (visit) => {
-          const visitsWithWeight = visit
-            .filter(v => !activeTabUrls[v.url])
-            .map(v => Object.assign({}, v, { weight: 1.0 }))
-          this.mergeVisits(visitsWithWeight)
+        for(var i=0; i <= 7; i++) {
+          const startTime = this.adjustMinutes(now, -(days * i) - 30)
+          const endTime = this.adjustMinutes(now, -(days * i) + 30)
+
+          chrome.history.search(
+            { text: '', maxResults: 10000, startTime: startTime, endTime: endTime },
+            (visit) => {
+              const visitsWithWeight = visit
+                .filter(v => !activeTabUrls[v.url])
+                .map(v => Object.assign({}, v, { weight: 1.0 }))
+              this.mergeVisits(visitsWithWeight)
+            }
+          )
         }
-      )
-    }
+      })
+    })
   }
 
   compareWeight(a, b) {
     if (a.weight > b.weight) return -1
     if (a.weight < b.weight) return 1
     return 0
+  }
+
+  onScopeChange(newScope) {
+    this.setState(Object.assign({}, this.state, { marks: {}, sortedKeys: [], scope: newScope }))
+    chrome.storage.sync.set({ scope:  newScope })
+    this.loadData()
   }
 
   render() {
@@ -79,6 +93,9 @@ class UrlHistoryList extends Component {
         width: '100%',
         overflow: 'hidden',
         lineHeight: '1.2em'
+      },
+      scopeDropdown: {
+        marginLeft: 110
       },
       titleBar: {
         position: 'fixed',
@@ -99,6 +116,11 @@ class UrlHistoryList extends Component {
       <div>
         <header style={ styles.titleBar }>
           smarks
+          <select value={ this.state.scope } style={ styles.scopeDropdown } onChange={(event) => this.onScopeChange(event.target.value)}>
+            <option value='days'>days</option>
+            <option value='hours'>hours</option>
+            <option value='minutes'>minutes</option>
+          </select>
         </header>
         <div style={{padding: 10, marginTop: 40 }}>
           {
