@@ -108,8 +108,9 @@ class UrlHistoryList extends Component {
         top: 0,
         left: 0,
         right: 0,
-        height: 40,
-        backgroundColor: '#1fc8db',
+        //backgroundColor: '#16a085',
+        borderBottom: 'solid 5px #16a085',
+        backgroundColor: '#1abc9c',
         color: 'white',
         zIndex: 100,
         fontWeight: 300,
@@ -121,14 +122,14 @@ class UrlHistoryList extends Component {
     return (
       <div>
         <header style={ styles.titleBar }>
-          smarks
+          <span><strong style={{ color: 'white ' }}>s</strong>marks</span>
           <select value={ this.state.scope } style={ styles.scopeDropdown } onChange={(event) => this.onScopeChange(event.target.value)}>
             <option value='days'>days</option>
             <option value='hours'>hours</option>
             <option value='minutes'>minutes</option>
           </select>
         </header>
-        <div style={{padding: 10, marginTop: 40 }}>
+        <div style={{padding: 10, marginTop: 45 }}>
           {
             this.state.sortedKeys.map((k, index) => {
               var mark = this.state.marks[k]
