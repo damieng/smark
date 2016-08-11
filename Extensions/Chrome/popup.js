@@ -19,11 +19,12 @@ class UrlHistoryList extends Component {
   normalizeUrl(visit) {
     const url = URL.parse(visit.url)
 
-    var query = querystring.parse(url.query)
-    url.search = ''
+    const query = querystring.parse(url.query)
     delete query.ar
 
-    url.query = querystring.stringify(query)
+    const search = '?' + querystring.stringify(query)
+    if (search.length > 1)
+      url.search = search
     return url.format()
   }
 
