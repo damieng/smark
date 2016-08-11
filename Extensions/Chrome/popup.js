@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import URL from 'url'
+import querystring from 'querystring'
 
 require('bulma')
 
@@ -15,20 +16,25 @@ class UrlHistoryList extends Component {
       }
   }
 
-  getMergeKey(visit) {
+  normalizeUrl(visit) {
     const url = URL.parse(visit.url)
+
+    var query = querystring.parse(url.query)
     url.search = ''
+    delete query.ar
+
+    url.query = querystring.stringify(query)
     return url.format()
   }
 
   mergeVisits(visits) {
     const marks = this.state.marks
     visits.filter(f => f.title && f.url).forEach(v => {
-        const mk = this.getMergeKey(v)
-        if (marks[mk]) {
-          marks[mk].weight += v.weight
+        v.url = this.normalizeUrl(v)
+        if (marks[v.url]) {
+          marks[v.url].weight += v.weight
         } else {
-          marks[mk] = v
+          marks[v.url] = v
         }
       }
     )
@@ -36,7 +42,7 @@ class UrlHistoryList extends Component {
     this.state.sortedKeys = Object.keys(this.state.marks)
       .map(k => this.state.marks[k])
       .sort(this.compareWeight)
-      .map(k => this.getMergeKey(k))
+      .map(k => k.url)
 
     if(this.state.renderTimer) clearTimeout(this.state.renderTimer)
 
