@@ -9,6 +9,40 @@
     <script src="dist/bundle.js"></script>
     <style>
       select:focus { outline: none }
+
+      .content {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 100%;
+        overflow: hidden;
+        line-height: 1.2em;
+      }
+
+      .scopeDropdown {
+        margin-left: 110px;
+        font-size: 0.5em;
+        background-color: transparent;
+        color: white;
+        border-color: white;
+      }
+
+      .titleBar {
+        position: 'fixed';
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: #1abc9c;
+        color: white;
+        z-index: 100;
+        font-weight: 300;
+        font-size: 28px;
+        padding-left: 10px;
+        box-shadow: #bbb 0px 3px 5px;
+      }
+
+      .linkText {
+        border-bottom: 0px;
+      }
     </style>
   </head>
   <body>

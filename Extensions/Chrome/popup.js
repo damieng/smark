@@ -118,43 +118,10 @@ class UrlHistoryList extends Component {
   }
 
   render() {
-    const styles = {
-      content: {
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
-        width: '100%',
-        overflow: 'hidden',
-        lineHeight: '1.2em',
-      },
-      scopeDropdown: {
-        marginLeft: 110,
-        fontSize: '0.5em',
-        backgroundColor: 'transparent',
-        color: 'white',
-        borderColor: 'white',
-      },
-      titleBar: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: '#1abc9c',
-        color: 'white',
-        zIndex: 100,
-        fontWeight: 300,
-        fontSize: 28,
-        paddingLeft: 10,
-        boxShadow: '#bbb 0px 3px 5px'
-      },
-      linkText: {
-        borderBottom: '0px',
-      },
-    }
-
     if(this.state.loading) {
       return (
         <div style={{ height: 50 }}>
-          <header style={ styles.titleBar }>
+          <header className="titleBar">
             <span><strong style={{ color: 'white ' }}>s</strong>marks</span>
           </header>
           <div style={{ marginTop: 50, paddingLeft: 10 }}>
@@ -165,15 +132,15 @@ class UrlHistoryList extends Component {
 
     return (
       <div>
-        <header style={ styles.titleBar }>
+        <header className="titleBar">
           <span><strong style={{ color: 'white ' }}>s</strong>marks</span>
-          <select value={ this.state.scope } style={ styles.scopeDropdown } onChange={(event) => this.onScopeChange(event.target.value)}>
-            <option value='days'>days</option>
-            <option value='hours'>hours</option>
-            <option value='minutes'>minutes</option>
+          <select value={ this.state.scope } className="scopeDropdown" onChange={(event) => this.onScopeChange(event.target.value)}>
+            <option value="days">days</option>
+            <option value="hours">hours</option>
+            <option value="minutes">minutes</option>
           </select>
         </header>
-        <div style={{padding: 10, marginTop: 45 }}>
+        <div style={{padding: 10}}>
           {
             this.state.sortedKeys.map((k, index) => {
               var mark = this.state.marks[k]
@@ -184,8 +151,8 @@ class UrlHistoryList extends Component {
                     </div>
                   </figure>
                   <div className="media-content" style={{ width: 250 }}>
-                    <div className="content" style={styles.content}>
-                      <a title={mark.url} href={mark.url} target="_blank" style={styles.linkText}>{mark.title}</a>
+                    <div className="content" className="content">
+                      <a title={mark.url} href={mark.url} target="_blank" className="linkText">{mark.title}</a>
                     </div>
                   </div>
                 </article>
