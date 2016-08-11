@@ -20,22 +20,28 @@ class UrlHistoryList extends Component {
     const url = URL.parse(visit.url)
 
     const query = querystring.parse(url.query)
+
+    // Shitty junk url stuff
     delete query.ar
+    delete query.utm_source
+    delete query.tag
+    delete query.source
+    delete query.hl
 
     const search = '?' + querystring.stringify(query)
-    if (search.length > 1)
-      url.search = search
+    url.search = (search.length > 1) ? search : ''
+
     return url.format()
   }
 
   mergeVisits(visits) {
     const marks = this.state.marks
     visits.filter(f => f.title && f.url).forEach(v => {
-        v.url = this.normalizeUrl(v)
-        if (marks[v.url]) {
-          marks[v.url].weight += v.weight
+        v.key = this.normalizeUrl(v)
+        if (marks[v.key]) {
+          marks[v.key].weight += v.weight
         } else {
-          marks[v.url] = v
+          marks[v.key] = v
         }
       }
     )
@@ -43,7 +49,7 @@ class UrlHistoryList extends Component {
     this.state.sortedKeys = Object.keys(this.state.marks)
       .map(k => this.state.marks[k])
       .sort(this.compareWeight)
-      .map(k => k.url)
+      .map(v => v.key)
 
     if(this.state.renderTimer) clearTimeout(this.state.renderTimer)
 
