@@ -50,7 +50,7 @@ class UrlHistoryList extends Component {
 
   loadData() {
     chrome.storage.sync.get('scope', (storage) => {
-      this.setState(Object.assign({}, this.state, { scope: storage.scope }))
+      this.setState(Object.assign({}, this.state, { scope: storage.scope || 'days' }))
       chrome.tabs.query({}, (tabs) => {
         const activeTabUrls = {}
         tabs.forEach((tab) => {
