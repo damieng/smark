@@ -124,15 +124,14 @@ class UrlHistoryList extends Component {
         textOverflow: 'ellipsis',
         width: '100%',
         overflow: 'hidden',
-        lineHeight: '1.2em'
+        lineHeight: '1.2em',
       },
       scopeDropdown: {
         marginLeft: 110,
         fontSize: '0.5em',
         backgroundColor: 'transparent',
         color: 'white',
-        borderColor: 'white'
-
+        borderColor: 'white',
       },
       titleBar: {
         position: 'fixed',
@@ -146,7 +145,10 @@ class UrlHistoryList extends Component {
         fontSize: 28,
         paddingLeft: 10,
         boxShadow: '#bbb 0px 3px 5px'
-      }
+      },
+      linkText: {
+        borderBottom: '0px',
+      },
     }
 
     if(this.state.loading) {
@@ -183,7 +185,7 @@ class UrlHistoryList extends Component {
                   </figure>
                   <div className="media-content" style={{ width: 250 }}>
                     <div className="content" style={styles.content}>
-                      <a title={mark.url} href={mark.url} target="_blank" style={{ borderBottom: '0px' }}>{mark.title}</a>
+                      <a title={mark.url} href={mark.url} target="_blank" style={styles.linkText}>{mark.title}</a>
                     </div>
                   </div>
                 </article>
