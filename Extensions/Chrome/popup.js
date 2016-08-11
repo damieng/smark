@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import URL from 'url'
 
 require('bulma')
 
@@ -14,13 +15,20 @@ class UrlHistoryList extends Component {
       }
   }
 
+  getMergeKey(visit) {
+    const url = URL.parse(visit.url)
+    url.search = ''
+    return url.format()
+  }
+
   mergeVisits(visits) {
     const marks = this.state.marks
-    visits.filter(f => f.title).forEach(v => {
-        if (marks[v.url]) {
-          marks[v.url].weight += v.weight
+    visits.filter(f => f.title && f.url).forEach(v => {
+        const mk = this.getMergeKey(v)
+        if (marks[mk]) {
+          marks[mk].weight += v.weight
         } else {
-          marks[v.url] = v
+          marks[mk] = v
         }
       }
     )
@@ -28,8 +36,7 @@ class UrlHistoryList extends Component {
     this.state.sortedKeys = Object.keys(this.state.marks)
       .map(k => this.state.marks[k])
       .sort(this.compareWeight)
-      .map(k => k.url)
-
+      .map(k => this.getMergeKey(k))
 
     if(this.state.renderTimer) clearTimeout(this.state.renderTimer)
 
@@ -156,7 +163,7 @@ class UrlHistoryList extends Component {
             this.state.sortedKeys.map((k, index) => {
               var mark = this.state.marks[k]
               return (
-                <article className="media" key={index}>
+                <article className="media" key={index} title={k}>
                   <figure className="media-left">
                     <div className="image is-16x16" style={{ backgroundImage: `-webkit-image-set(url("chrome://favicon/size/16@2x/${mark.url}") 2x)`}}>
                     </div>
