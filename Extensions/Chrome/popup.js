@@ -70,7 +70,7 @@ class UrlHistoryList extends Component {
 
   loadData() {
     chrome.storage.sync.get('scope', (storage) => {
-      this.setState(Object.assign({}, this.state, { scope: storage.scope || 'days' }))
+      this.setState(Object.assign({}, this.state))
       chrome.tabs.query({}, (tabs) => {
         const activeTabUrls = {}
         tabs.forEach((tab) => {
@@ -79,13 +79,7 @@ class UrlHistoryList extends Component {
         })
 
         const now = new Date()
-        const scopes = {
-          days: { timespan: 60 * 24, lookbehind: 7, slidingWindow: 30 },
-          hours: { timespan: 60, lookbehind: 12, slidingWindow: 30 },
-          minutes: { timespan: 1, lookbehind: 30, slidingWindow: 15 }
-        }
-
-        const scope = scopes[this.state.scope]
+        const scope = { timespan: 60 * 24, lookbehind: 7, slidingWindow: 30 }
 
         for(var i=0; i <= scope.lookbehind; i++) {
           const startTime = this.adjustMinutes(now, -(scope.timespan * i) - scope.slidingWindow)
@@ -134,11 +128,6 @@ class UrlHistoryList extends Component {
       <div>
         <header className="titleBar">
           <span><strong style={{ color: 'white ' }}>s</strong>marks</span>
-          <select value={ this.state.scope } className="scopeDropdown" onChange={(event) => this.onScopeChange(event.target.value)}>
-            <option value="days">days</option>
-            <option value="hours">hours</option>
-            <option value="minutes">minutes</option>
-          </select>
         </header>
         <div style={{padding: 10}}>
           {
