@@ -1,2 +1,3 @@
-# Surelock Holmes
-Surelock Holmes will keep your passwords safe
+# Smart Marks
+
+Google Chrome Extensions that tries to build bookmarks smartly from your history.
